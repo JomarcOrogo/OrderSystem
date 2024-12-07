@@ -33,7 +33,7 @@ public class ReceiptView {
                 new String[]{"Save"}, "Save");
 
         if (option == JOptionPane.YES_OPTION) {
-            String filename = "order_" + orderNumber;
+            String filename = "order_" + orderNumber + ".txt";
             File file = new File("./receipts", filename);
 
             try (FileWriter writer = new FileWriter(file)) {

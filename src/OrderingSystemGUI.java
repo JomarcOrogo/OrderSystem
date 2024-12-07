@@ -19,7 +19,10 @@ public class OrderingSystemGUI {
         JButton viewCartButton = new JButton("View Cart");
         viewCartButton.setBackground(new Color(0, 128, 255));
         viewCartButton.setForeground(Color.WHITE);
-        viewCartButton.addActionListener(e -> new CartView(cart).display(frame));
+        viewCartButton.addActionListener(e -> {
+            new CartView(cart).display(frame);
+            viewCartButton.setText("View Cart [~]");
+        });
 
         JButton checkoutButton = new JButton("Checkout");
         checkoutButton.setBackground(new Color(218, 41, 28));
@@ -69,6 +72,9 @@ public class OrderingSystemGUI {
                     int quantity = Integer.parseInt(quantityStr);
                     cart.addItem(name, price, quantity);
                     JOptionPane.showMessageDialog(frame, name + " added to cart!");
+                    if(cart.getCartItemCount() != 0) {
+                        viewCartButton.setText("View Cart [" + Integer.toString(cart.getCartItemCount()) + "]");
+                    }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame, "Invalid quantity.");
                 }
@@ -79,6 +85,7 @@ public class OrderingSystemGUI {
             itemPanel.add(addButton, BorderLayout.SOUTH);
 
             menuPanel.add(itemPanel);
+
         }
 
         frame.add(menuPanel, BorderLayout.CENTER);

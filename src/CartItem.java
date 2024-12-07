@@ -2,6 +2,7 @@ public class CartItem {
     private final String name;
     private final double price;
     private final int quantity;
+    private static int cartItems = 0;
 
     public CartItem(String name, double price, int quantity) {
         this.name = name;
@@ -20,4 +21,6 @@ public class CartItem {
     public int getQuantity() {
         return quantity;
     }
+
+    public int getCartItems() {return cartItems;}
 }

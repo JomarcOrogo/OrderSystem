@@ -1,34 +1,25 @@
 import java.util.ArrayList;
 
 public class Cart {
-    private ArrayList<CartItem> items;
+    private final ArrayList<CartItem> items;
 
     public Cart() {
         items = new ArrayList<>();
     }
 
-    // Add an item to the cart
     public void addItem(String name, double price, int quantity) {
-        for (CartItem item : items) {
-            if (item.getName().equals(name)) {
-                item.setQuantity(item.getQuantity() + quantity); // Update quantity if item already exists
-                return;
-            }
-        }
-        items.add(new CartItem(name, price, quantity)); // Add new item if it doesn't exist
+        items.add(new CartItem(name, price, quantity));
     }
 
-    // Get all items in the cart
+    public void removeItem(String name) {
+        items.removeIf(item -> item.getName().equalsIgnoreCase(name));
+    }
+
     public ArrayList<CartItem> getItems() {
-        return items;
+        return new ArrayList<>(items);
     }
 
-    // Calculate total price of all items in the cart
     public double calculateTotal() {
-        double total = 0;
-        for (CartItem item : items) {
-            total += item.getPrice() * item.getQuantity();
-        }
-        return total;
+        return items.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
     }
 }

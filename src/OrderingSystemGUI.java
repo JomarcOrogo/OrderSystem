@@ -1,87 +1,95 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class OrderingSystemGUI {
-
     public static void main(String[] args) {
-        Cart cart = new Cart();  // Create a new cart object
+        Cart cart = new Cart();
 
-        // JFrame setup for the GUI
-        JFrame frame = new JFrame("Fast Food Ordering System");
-        frame.setSize(600, 400);
+        JFrame frame = new JFrame("Laña's Eatery Ordering System");
+        frame.setSize(700, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Menu Panel
-        JPanel menuPanel = new JPanel();
-        menuPanel.setLayout(new GridLayout(0, 2));
+        JPanel menuPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        menuPanel.setBackground(new Color(255, 204, 0));
 
-        // Example menu items
         String[][] menuItems = {
-                {"Burger", "5.99"},
-                {"Fries", "2.99"},
-                {"Soda", "1.99"}
+                {"Burger", "P 150.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\burger.jpg"},
+                {"Fries", "P 60.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\fries.jpg"},
+                {"Soda", "P 40.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\soda.jpg"},
+                {"Pizza", "P 250.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\pizza.jpg"},
+                {"Pasta", "P 180.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\pasta.jpg"},
+                {"Salad", "P 120.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\salad.jpg"},
+                {"Ice Cream", "P 100.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\ice cream.jpg"},
+                {"Coffee", "P 90.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\coffee.jpg"},
+                {"Chicken", "P 160.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\fried chicken.jpg"},
+                {"Smoothie", "P 130.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\smoothie.jpg"}
         };
 
-        // Adding menu items to the panel with buttons
         for (String[] item : menuItems) {
             String name = item[0];
-            double price = Double.parseDouble(item[1]);
+            double price = Double.parseDouble(item[1].substring(2)); // Remove "P"
+            String imagePath = item[2];
 
-            JLabel itemLabel = new JLabel(name + " - $" + price);
+            JPanel itemPanel = new JPanel(new BorderLayout());
+            itemPanel.setBackground(new Color(255, 204, 0));
+
+            ImageIcon itemImage = new ImageIcon(imagePath);
+            JLabel imageLabel = new JLabel(itemImage);
+
+            JLabel nameLabel = new JLabel(name + " - P" + price);
+            nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            nameLabel.setForeground(Color.RED);
+
             JButton addButton = new JButton("Add to Cart");
-
-            // Add action listener for the button to add item to the cart
-            addButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String quantityStr = JOptionPane.showInputDialog(null, "Enter quantity:");
-                    try {
-                        int quantity = Integer.parseInt(quantityStr);
-                        cart.addItem(name, price, quantity);
-                        JOptionPane.showMessageDialog(null, name + " added to cart!");
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(null, "Invalid quantity.");
-                    }
+            addButton.setBackground(Color.RED);
+            addButton.setForeground(Color.WHITE);
+            addButton.addActionListener(e -> {
+                String quantityStr = JOptionPane.showInputDialog("Enter quantity:");
+                try {
+                    int quantity = Integer.parseInt(quantityStr);
+                    cart.addItem(name, price, quantity);
+                    JOptionPane.showMessageDialog(frame, name + " added to cart!");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid quantity.");
                 }
             });
 
-            menuPanel.add(itemLabel);
-            menuPanel.add(addButton);
+            itemPanel.add(imageLabel, BorderLayout.WEST);
+            itemPanel.add(nameLabel, BorderLayout.CENTER);
+            itemPanel.add(addButton, BorderLayout.SOUTH);
+
+            menuPanel.add(itemPanel);
         }
 
-        // Add menu panel to the frame
         frame.add(menuPanel, BorderLayout.CENTER);
 
-        // Button to view cart contents
+        JPanel navigationPanel = new JPanel();
+        navigationPanel.setBackground(new Color(255, 204, 0));
+
         JButton viewCartButton = new JButton("View Cart");
-        viewCartButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<CartItem> items = cart.getItems();  // Get the list of items in the cart
-                if (items.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "Cart is empty!");
-                } else {
-                    StringBuilder cartContents = new StringBuilder("Cart Contents:\n");
-                    for (CartItem item : items) {
-                        cartContents.append(String.format("%s x%d - $%.2f\n",
-                                item.getName(), item.getQuantity(), item.getPrice() * item.getQuantity()));
-                    }
-                    cartContents.append(String.format("Total: $%.2f", cart.calculateTotal()));
-                    JOptionPane.showMessageDialog(frame, cartContents.toString());
-                }
+        viewCartButton.setBackground(new Color(0, 128, 255));
+        viewCartButton.setForeground(Color.WHITE);
+        viewCartButton.addActionListener(e -> new CartView(cart).display(frame));
+
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.setBackground(new Color(218, 41, 28));
+        checkoutButton.setForeground(Color.WHITE);
+        checkoutButton.addActionListener(e -> {
+            if (cart.getItems().isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Cart is empty!");
+            } else {
+                new ReceiptView(cart).display(frame);
             }
         });
 
-        // Navigation panel with the "View Cart" button
-        JPanel navigationPanel = new JPanel();
         navigationPanel.add(viewCartButton);
-        frame.add(navigationPanel, BorderLayout.SOUTH);
+        navigationPanel.add(checkoutButton);
 
-        // Set frame visibility
+        frame.add(navigationPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 }

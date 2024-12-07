@@ -1,6 +1,6 @@
 import javax.swing.*;
-import java.awt.*;
 import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,8 +14,11 @@ public class ReceiptView {
 
     public void display(JFrame parent) {
         StringBuilder receipt = new StringBuilder("Laña's Eatery Receipt\n");
-        receipt.append("Order Number: ").append(System.currentTimeMillis() % 10000).append("\n");
-        receipt.append("Date: ").append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).append("\n\n");
+        String dateToday = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String orderNumber = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+        receipt.append("Order Number: ").append(orderNumber).append("\n");
+        receipt.append("Date: ").append(dateToday).append("\n\n");
         receipt.append("Items:\n");
 
         cart.getItems().forEach(item -> receipt.append(String.format("%s x%d - P%.2f\n", item.getName(), item.getQuantity(), item.getPrice() * item.getQuantity())));
@@ -30,9 +33,12 @@ public class ReceiptView {
                 new String[]{"Save"}, "Save");
 
         if (option == JOptionPane.YES_OPTION) {
-            try (FileWriter writer = new FileWriter("order_receipt.txt")) {
+            String filename = "order_" + orderNumber;
+            File file = new File("./receipts", filename);
+
+            try (FileWriter writer = new FileWriter(file)) {
                 writer.write(receipt.toString());
-                JOptionPane.showMessageDialog(parent, "Receipt saved as order_receipt.txt");
+                JOptionPane.showMessageDialog(parent, "Receipt saved as " + filename);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(parent, "Failed to save receipt: " + ex.getMessage());
             }

@@ -13,6 +13,25 @@ public class OrderingSystemGUI {
         JPanel menuPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         menuPanel.setBackground(new Color(255, 204, 0));
 
+        JPanel navigationPanel = new JPanel();
+        navigationPanel.setBackground(new Color(255, 204, 0));
+
+        JButton viewCartButton = new JButton("View Cart");
+        viewCartButton.setBackground(new Color(0, 128, 255));
+        viewCartButton.setForeground(Color.WHITE);
+        viewCartButton.addActionListener(e -> new CartView(cart).display(frame));
+
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.setBackground(new Color(218, 41, 28));
+        checkoutButton.setForeground(Color.WHITE);
+        checkoutButton.addActionListener(e -> {
+            if (cart.getItems().isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Cart is empty!");
+            } else {
+                new ReceiptView(cart).display(frame);
+            }
+        });
+
         String[][] menuItems = {
                 {"Burger", "P 150.00", "./OOP Final Project/burger.jpg"},
                 {"Fries", "P 60.00", "./OOP Final Project/fries.jpg"},
@@ -63,25 +82,6 @@ public class OrderingSystemGUI {
         }
 
         frame.add(menuPanel, BorderLayout.CENTER);
-
-        JPanel navigationPanel = new JPanel();
-        navigationPanel.setBackground(new Color(255, 204, 0));
-
-        JButton viewCartButton = new JButton("View Cart");
-        viewCartButton.setBackground(new Color(0, 128, 255));
-        viewCartButton.setForeground(Color.WHITE);
-        viewCartButton.addActionListener(e -> new CartView(cart).display(frame));
-
-        JButton checkoutButton = new JButton("Checkout");
-        checkoutButton.setBackground(new Color(218, 41, 28));
-        checkoutButton.setForeground(Color.WHITE);
-        checkoutButton.addActionListener(e -> {
-            if (cart.getItems().isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Cart is empty!");
-            } else {
-                new ReceiptView(cart).display(frame);
-            }
-        });
 
         navigationPanel.add(viewCartButton);
         navigationPanel.add(checkoutButton);

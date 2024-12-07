@@ -1,0 +1,12 @@
+Laña's Eatery Receipt
+Order Number: 2903
+Date: 2024-12-08 00:00:32
+
+Items:
+Smoothie x1 - P130.00
+Burger x1 - P150.00
+Salad x1 - P120.00
+
+Total: P400.00
+
+Thank you for your order!

@@ -9,7 +9,7 @@ public class OrderingSystemGUI {
         Cart cart = new Cart();
 
         JFrame frame = new JFrame("Laña's Eatery Ordering System");
-        frame.setSize(700, 500);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 

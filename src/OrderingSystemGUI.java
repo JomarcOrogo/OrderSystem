@@ -56,11 +56,12 @@ public class OrderingSystemGUI {
         // Add menu panel to the frame
         frame.add(menuPanel, BorderLayout.CENTER);
 
-        // Button to view cart contents
-        JButton viewCartButton = new JButton("View Cart");
-        viewCartButton.addActionListener(new ActionListener() {
+        // Button to checkout and view cart contents
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Display cart contents
                 ArrayList<CartItem> items = cart.getItems();  // Get the list of items in the cart
                 if (items.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Cart is empty!");
@@ -70,15 +71,24 @@ public class OrderingSystemGUI {
                         cartContents.append(String.format("%s x%d - $%.2f\n",
                                 item.getName(), item.getQuantity(), item.getPrice() * item.getQuantity()));
                     }
-                    cartContents.append(String.format("Total: $%.2f", cart.calculateTotal()));
-                    JOptionPane.showMessageDialog(frame, cartContents.toString());
+                    double total = cart.calculateTotal();
+                    cartContents.append(String.format("Total: $%.2f", total));
+
+                    // Show the cart summary
+                    int option = JOptionPane.showConfirmDialog(frame, cartContents.toString() + "\nConfirm your order?", "Checkout", JOptionPane.YES_NO_OPTION);
+                    if (option == JOptionPane.YES_OPTION) {
+                        JOptionPane.showMessageDialog(frame, "Order confirmed! Total: $" + total);
+                        // You can save the order here (e.g., save to a database or log)
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Order canceled.");
+                    }
                 }
             }
         });
 
-        // Navigation panel with the "View Cart" button
+        // Navigation panel with the "Checkout" button
         JPanel navigationPanel = new JPanel();
-        navigationPanel.add(viewCartButton);
+        navigationPanel.add(checkoutButton);
         frame.add(navigationPanel, BorderLayout.SOUTH);
 
         // Set frame visibility

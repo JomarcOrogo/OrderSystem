@@ -8,7 +8,22 @@ public class Cart {
     }
 
     public void addItem(String name, double price, int quantity) {
-        items.add(new CartItem(name, price, quantity));
+        boolean itemExists = false;
+
+        // Check if the item already exists in the cart
+        for (CartItem item : items) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                // Update the quantity if the item exists
+                item.setQuantity(item.getQuantity() + quantity);
+                itemExists = true;
+                break;
+            }
+        }
+
+        // Add as a new item if it doesn't exist
+        if (!itemExists) {
+            items.add(new CartItem(name, price, quantity));
+        }
     }
 
     public void removeItem(String name) {

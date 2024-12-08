@@ -14,31 +14,33 @@ public class CartView {
         dialog.setSize(600, 400);
         dialog.setLayout(new BorderLayout());
 
-        // Table setup
         String[] columnNames = {"Item", "Quantity", "Price"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
-        double grandTotal = 0.0;
-
-        for (CartItem item : cart.getItems()) {
-            grandTotal += item.getPrice() * item.getQuantity();
-
-            model.addRow(new Object[]{
-                    item.getName(),
-                    item.getQuantity(),
-                    String.format("₱%.2f", item.getPrice())
-            });
-        }
-
-        // Add grand total row
-        model.addRow(new Object[]{"Total", "", String.format("₱%.2f", grandTotal)});
 
         JTable cartTable = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(cartTable);
         dialog.add(scrollPane, BorderLayout.CENTER);
 
-        // Bottom panel with checkout button
+        cart.getItems().forEach(item -> model.addRow(new Object[]{
+                item.getName(),
+                item.getQuantity(),
+                String.format("₱%.2f", item.getPrice() * item.getQuantity())
+        }));
+
         JPanel buttonPanel = new JPanel();
+        JButton removeButton = new JButton("Remove Selected");
+        removeButton.addActionListener(e -> {
+            int selectedRow = cartTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String itemName = (String) model.getValueAt(selectedRow, 0);
+                cart.removeItem(itemName);
+                model.removeRow(selectedRow);
+                JOptionPane.showMessageDialog(dialog, "Item removed!");
+            } else {
+                JOptionPane.showMessageDialog(dialog, "No item selected!");
+            }
+        });
+
         JButton checkoutButton = new JButton("Checkout");
         checkoutButton.addActionListener(e -> {
             if (cart.getItems().isEmpty()) {
@@ -49,6 +51,7 @@ public class CartView {
             }
         });
 
+        buttonPanel.add(removeButton);
         buttonPanel.add(checkoutButton);
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 

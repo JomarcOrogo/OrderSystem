@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.io.FileWriter;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,8 +20,8 @@ public class ReceiptView {
         receipt.append("Date: ").append(dateToday).append("\n\n");
         receipt.append("Items:\n");
 
-        cart.getItems().forEach(item -> receipt.append(String.format("%s x%d - P%.2f\n", item.getName(), item.getQuantity(), item.getPrice() * item.getQuantity())));
-        receipt.append(String.format("\nTotal: P%.2f\n", cart.calculateTotal()));
+        cart.getItems().forEach(item -> receipt.append(String.format("%s x%d - ₱%.2f\n", item.getName(), item.getQuantity(), item.getPrice() * item.getQuantity())));
+        receipt.append(String.format("\nTotal: ₱%.2f\n", cart.calculateTotal()));
         receipt.append("\nThank you for your order!");
 
         JTextArea receiptArea = new JTextArea(receipt.toString());
@@ -33,10 +32,9 @@ public class ReceiptView {
                 new String[]{"Save"}, "Save");
 
         if (option == JOptionPane.YES_OPTION) {
-            String filename = "order_" + orderNumber;
-            File file = new File("./receipts", filename);
+            String filename = "order_" + orderNumber + ".txt";
 
-            try (FileWriter writer = new FileWriter(file)) {
+            try (FileWriter writer = new FileWriter(filename)) {
                 writer.write(receipt.toString());
                 JOptionPane.showMessageDialog(parent, "Receipt saved as " + filename);
             } catch (IOException ex) {

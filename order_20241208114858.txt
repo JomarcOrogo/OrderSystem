@@ -1,0 +1,11 @@
+Laña's Eatery Receipt
+Order Number: 20241208114858
+Date: 2024-12-08 11:48:58
+
+Items:
+Burger x2 - ₱300.00
+Coffee x2 - ₱180.00
+
+Total: ₱480.00
+
+Thank you for your order!

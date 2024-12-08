@@ -55,6 +55,8 @@ public class CartView {
         buttonPanel.add(checkoutButton);
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 
+        dialog.setLocationRelativeTo(null);
+
         dialog.setVisible(true);
     }
 }

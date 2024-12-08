@@ -22,4 +22,9 @@ public class Cart {
     public double calculateTotal() {
         return items.stream().mapToDouble(item -> item.getPrice() * item.getQuantity()).sum();
     }
+
+    // New method to clear the cart
+    public void clear() {
+        items.clear();
+    }
 }

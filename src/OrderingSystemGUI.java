@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class OrderingSystemGUI {
     public static void main(String[] args) {
@@ -40,7 +38,7 @@ public class OrderingSystemGUI {
             ImageIcon itemImage = new ImageIcon(imagePath);
             JLabel imageLabel = new JLabel(itemImage);
 
-            JLabel nameLabel = new JLabel(name + " - P" + price);
+            JLabel nameLabel = new JLabel(name + " - " + item[1]);
             nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
             nameLabel.setForeground(Color.RED);
 
@@ -75,21 +73,9 @@ public class OrderingSystemGUI {
         viewCartButton.setForeground(Color.WHITE);
         viewCartButton.addActionListener(e -> new CartView(cart).display(frame));
 
-        JButton checkoutButton = new JButton("Checkout");
-        checkoutButton.setBackground(new Color(218, 41, 28));
-        checkoutButton.setForeground(Color.WHITE);
-        checkoutButton.addActionListener(e -> {
-            if (cart.getItems().isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Cart is empty!");
-            } else {
-                new ReceiptView(cart).display(frame);
-            }
-        });
-
         navigationPanel.add(viewCartButton);
-        navigationPanel.add(checkoutButton);
-
         frame.add(navigationPanel, BorderLayout.SOUTH);
+
         frame.setVisible(true);
     }
 }

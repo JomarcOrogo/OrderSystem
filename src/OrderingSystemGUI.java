@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class OrderingSystemGUI {
     public static void main(String[] args) {
@@ -10,7 +11,7 @@ public class OrderingSystemGUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        JPanel menuPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        JPanel menuPanel = new JPanel(new GridLayout(0, 2, 20, 20));
         menuPanel.setBackground(new Color(255, 204, 0));
 
         String[][] menuItems = {
@@ -33,17 +34,26 @@ public class OrderingSystemGUI {
 
             JPanel itemPanel = new JPanel(new BorderLayout());
             itemPanel.setBackground(new Color(255, 204, 0));
+            itemPanel.setPreferredSize(new Dimension(250, 150)); // Smaller item panels
 
+            // Centering the image in the panel with a yellow background
+            JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Center layout for image
+            imagePanel.setBackground(new Color(255, 204, 0)); // Set yellow background
             ImageIcon itemImage = new ImageIcon(imagePath);
+            Image img = itemImage.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH); // Scale image
+            itemImage = new ImageIcon(img);
             JLabel imageLabel = new JLabel(itemImage);
+            imagePanel.add(imageLabel);
 
             JLabel nameLabel = new JLabel(name + " - " + item[1]);
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Smaller font
             nameLabel.setForeground(Color.RED);
 
             JButton addButton = new JButton("Add to Cart");
+            addButton.setPreferredSize(new Dimension(150, 30)); // Smaller button size
             addButton.setBackground(Color.RED);
             addButton.setForeground(Color.WHITE);
+            addButton.setFont(new Font("Arial", Font.PLAIN, 12)); // Smaller font
             addButton.addActionListener(e -> {
                 String quantityStr = JOptionPane.showInputDialog("Enter quantity:");
                 try {
@@ -55,7 +65,7 @@ public class OrderingSystemGUI {
                 }
             });
 
-            itemPanel.add(imageLabel, BorderLayout.WEST);
+            itemPanel.add(imagePanel, BorderLayout.NORTH); // Add image panel to the North
             itemPanel.add(nameLabel, BorderLayout.CENTER);
             itemPanel.add(addButton, BorderLayout.SOUTH);
 
@@ -70,6 +80,7 @@ public class OrderingSystemGUI {
         JButton viewCartButton = new JButton("View Cart");
         viewCartButton.setBackground(new Color(0, 128, 255));
         viewCartButton.setForeground(Color.WHITE);
+        viewCartButton.setPreferredSize(new Dimension(150, 40)); // Smaller button size
         viewCartButton.addActionListener(e -> new CartView(cart).display(frame));
 
         navigationPanel.add(viewCartButton);

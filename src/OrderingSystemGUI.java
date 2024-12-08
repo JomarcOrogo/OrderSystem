@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class OrderingSystemGUI {
     public static void main(String[] args) {
@@ -59,7 +60,7 @@ public class OrderingSystemGUI {
             ImageIcon itemImage = new ImageIcon(imagePath);
             JLabel imageLabel = new JLabel(itemImage);
 
-            JLabel nameLabel = new JLabel(name + " - P" + price);
+            JLabel nameLabel = new JLabel(name + " - " + item[1]);
             nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
             nameLabel.setForeground(Color.RED);
 
@@ -91,9 +92,8 @@ public class OrderingSystemGUI {
         frame.add(menuPanel, BorderLayout.CENTER);
 
         navigationPanel.add(viewCartButton);
-        navigationPanel.add(checkoutButton);
-
         frame.add(navigationPanel, BorderLayout.SOUTH);
+
         frame.setVisible(true);
     }
 }

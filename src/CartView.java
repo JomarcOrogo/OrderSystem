@@ -9,48 +9,49 @@ public class CartView {
         this.cart = cart;
     }
 
-    public void display(JFrame parent) {
-        JFrame cartFrame = new JFrame("View Cart");
-        cartFrame.setSize(600, 400);
+    public void display(JFrame parentFrame) {
+        JDialog dialog = new JDialog(parentFrame, "View Cart", true);
+        dialog.setSize(600, 400);
+        dialog.setLayout(new BorderLayout());
 
-        // Define table column names
+        // Table setup
         String[] columnNames = {"Item", "Quantity", "Price"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-        // Populate table data from the cart
-        Object[][] data = new Object[cart.getItems().size()][3];
-        for (int i = 0; i < cart.getItems().size(); i++) {
-            CartItem item = cart.getItems().get(i);
-            data[i][0] = item.getName();
-            data[i][1] = item.getQuantity();
-            data[i][2] = String.format("P %.2f", item.getPrice() * item.getQuantity());
+        double grandTotal = 0.0;
+
+        for (CartItem item : cart.getItems()) {
+            grandTotal += item.getPrice() * item.getQuantity();
+
+            model.addRow(new Object[]{
+                    item.getName(),
+                    item.getQuantity(),
+                    String.format("₱%.2f", item.getPrice())
+            });
         }
 
-        // Create the table model and JTable
-        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
-        JTable cartTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(cartTable);
+        // Add grand total row
+        model.addRow(new Object[]{"Total", "", String.format("₱%.2f", grandTotal)});
 
-        // Create a remove button
-        JButton removeButton = new JButton("Remove Selected");
-        removeButton.addActionListener(e -> {
-            int selectedRow = cartTable.getSelectedRow();
-            if (selectedRow >= 0) {
-                String selectedItem = (String) cartTable.getValueAt(selectedRow, 0);
-                cart.removeItem(selectedItem);
-                tableModel.removeRow(selectedRow);
-                JOptionPane.showMessageDialog(cartFrame, selectedItem + " removed from cart.");
+        JTable cartTable = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(cartTable);
+        dialog.add(scrollPane, BorderLayout.CENTER);
+
+        // Bottom panel with checkout button
+        JPanel buttonPanel = new JPanel();
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.addActionListener(e -> {
+            if (cart.getItems().isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Cart is empty!");
             } else {
-                JOptionPane.showMessageDialog(cartFrame, "No item selected.");
+                new ReceiptView(cart).display(parentFrame);
+                dialog.dispose();
             }
         });
 
-        // Layout for the frame
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(removeButton);
+        buttonPanel.add(checkoutButton);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-        cartFrame.add(scrollPane, BorderLayout.CENTER);
-        cartFrame.add(buttonPanel, BorderLayout.SOUTH);
-        cartFrame.setLocationRelativeTo(parent);
-        cartFrame.setVisible(true);
+        dialog.setVisible(true);
     }
 }

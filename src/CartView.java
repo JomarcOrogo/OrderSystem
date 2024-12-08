@@ -15,20 +15,20 @@ public class CartView {
         JDialog dialog = new JDialog(parentFrame, "View Cart", true);
         dialog.setSize(700, 500);
         dialog.setLayout(new BorderLayout());
-        dialog.setLocationRelativeTo(null); // Center the dialog on the screen
+        dialog.setLocationRelativeTo(null);
 
         // Table setup with checkboxes
         String[] columnNames = {"Select", "Item", "Quantity", "Price"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 0) return Boolean.class; // First column for checkboxes
+                if (columnIndex == 0) return Boolean.class;
                 return super.getColumnClass(columnIndex);
             }
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 0; // Only the checkbox column is editable
+                return column == 0;
             }
         };
 
@@ -39,10 +39,10 @@ public class CartView {
         JTable cartTable = new JTable(model);
 
         // Adjust column widths
-        cartTable.getColumnModel().getColumn(0).setPreferredWidth(50);  // Select column (Checkbox)
-        cartTable.getColumnModel().getColumn(1).setPreferredWidth(250); // Item column
-        cartTable.getColumnModel().getColumn(2).setPreferredWidth(100); // Quantity column
-        cartTable.getColumnModel().getColumn(3).setPreferredWidth(150); // Price column
+        cartTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        cartTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+        cartTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        cartTable.getColumnModel().getColumn(3).setPreferredWidth(150);
 
         JScrollPane scrollPane = new JScrollPane(cartTable);
         dialog.add(scrollPane, BorderLayout.CENTER);
@@ -53,13 +53,14 @@ public class CartView {
         totalLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
         JButton removeButton = new JButton("Remove Selected");
+        JButton editButton = new JButton("Edit Quantity");
         JButton checkoutButton = new JButton("Checkout");
 
         // ActionListener for removing selected items
         removeButton.addActionListener(e -> {
             ArrayList<Integer> rowsToRemove = new ArrayList<>();
             IntStream.range(0, model.getRowCount()).forEach(i -> {
-                if ((boolean) model.getValueAt(i, 0)) { // If checkbox is selected
+                if ((boolean) model.getValueAt(i, 0)) {
                     rowsToRemove.add(i);
                 }
             });
@@ -69,7 +70,6 @@ public class CartView {
                 return;
             }
 
-            // Remove items in reverse order to avoid shifting indices
             for (int i = rowsToRemove.size() - 1; i >= 0; i--) {
                 int rowIndex = rowsToRemove.get(i);
                 String itemName = (String) model.getValueAt(rowIndex, 1);
@@ -77,8 +77,44 @@ public class CartView {
                 model.removeRow(rowIndex);
             }
 
-            // Update the total
             totalLabel.setText(String.format("Total: ₱%.2f", cart.calculateTotal()));
+        });
+
+        // ActionListener for editing item quantity
+        editButton.addActionListener(e -> {
+            int selectedRow = -1;
+            for (int i = 0; i < model.getRowCount(); i++) {
+                if ((boolean) model.getValueAt(i, 0)) {
+                    selectedRow = i;
+                    break;
+                }
+            }
+
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(dialog, "No item selected for editing.");
+                return;
+            }
+
+            String itemName = (String) model.getValueAt(selectedRow, 1);
+            CartItem item = cart.findItem(itemName);
+
+            if (item != null) {
+                String newQuantityStr = JOptionPane.showInputDialog(dialog, "Enter new quantity for " + itemName + ":");
+                try {
+                    int newQuantity = Integer.parseInt(newQuantityStr);
+
+                    if (newQuantity > 0) {
+                        item.setQuantity(newQuantity);
+                        model.setValueAt(newQuantity, selectedRow, 2);
+                        model.setValueAt(String.format("₱%.2f", item.getPrice() * newQuantity), selectedRow, 3);
+                        totalLabel.setText(String.format("Total: ₱%.2f", cart.calculateTotal()));
+                    } else {
+                        JOptionPane.showMessageDialog(dialog, "Quantity must be greater than 0.");
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(dialog, "Invalid input. Please enter a valid number.");
+                }
+            }
         });
 
         // ActionListener for checkout button
@@ -93,6 +129,7 @@ public class CartView {
 
         buttonPanel.add(totalLabel);
         buttonPanel.add(removeButton);
+        buttonPanel.add(editButton);
         buttonPanel.add(checkoutButton);
         dialog.add(buttonPanel, BorderLayout.SOUTH);
 

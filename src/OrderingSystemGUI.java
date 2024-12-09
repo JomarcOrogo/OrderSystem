@@ -15,16 +15,16 @@ public class OrderingSystemGUI {
         menuPanel.setBackground(new Color(255, 204, 0));
 
         String[][] menuItems = {
-                {"Burger", "P 150.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\burger.jpg"},
-                {"Fries", "P 60.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\fries.jpg"},
-                {"Soda", "P 40.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\soda.jpg"},
-                {"Pizza", "P 250.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\pizza.jpg"},
-                {"Pasta", "P 180.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\pasta.jpg"},
-                {"Salad", "P 120.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\salad.jpg"},
-                {"Ice Cream", "P 100.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\ice cream.jpg"},
-                {"Coffee", "P 90.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\coffee.jpg"},
-                {"Chicken", "P 160.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\fried chicken.jpg"},
-                {"Smoothie", "P 130.00", "C:\\Users\\jomar\\IdeaProjects\\OrderSystem\\OOP Final Project\\smoothie.jpg"}
+                {"Burger", "P 150.00", "OOP Final Project/burger.jpg"},
+                {"Fries", "P 60.00", "OOP Final Project/fries.jpg"},
+                {"Soda", "P 40.00", "OOP Final Project/soda.jpg"},
+                {"Pizza", "P 250.00", "OOP Final Project/pizza.jpg"},
+                {"Pasta", "P 180.00", "OOP Final Project/pasta.jpg"},
+                {"Salad", "P 120.00", "OOP Final Project/salad.jpg"},
+                {"Ice Cream", "P 100.00", "OOP Final Project/ice cream.jpg"},
+                {"Coffee", "P 90.00", "OOP Final Project/coffee.jpg"},
+                {"Chicken", "P 160.00", "OOP Final Project/fried chicken.jpg"},
+                {"Smoothie", "P 130.00", "OOP Final Project/smoothie.jpg"}
         };
 
         for (String[] item : menuItems) {
@@ -40,7 +40,7 @@ public class OrderingSystemGUI {
             JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Center layout for image
             imagePanel.setBackground(new Color(255, 204, 0)); // Set yellow background
             ImageIcon itemImage = new ImageIcon(imagePath);
-            Image img = itemImage.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH); // Scale image
+            Image img = itemImage.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH); // Scale image
             itemImage = new ImageIcon(img);
             JLabel imageLabel = new JLabel(itemImage);
             imagePanel.add(imageLabel);

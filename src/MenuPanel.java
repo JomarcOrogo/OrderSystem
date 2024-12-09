@@ -1,44 +1,71 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MenuPanel extends JPanel {
     private Cart cart;
 
     public MenuPanel(Cart cart) {
         this.cart = cart;
-        setLayout(new GridLayout(0, 2));
+
+        setLayout(new GridLayout(0, 2, 20, 20));
+        setBackground(new Color(255, 204, 0));
 
         String[][] menuItems = {
-                {"Burger", "5.99"},
-                {"Fries", "2.99"},
-                {"Soda", "1.99"}
+                {"Burger", "P 150.00", "OOP Final Project/burger.jpg"},
+                {"Fries", "P 60.00", "OOP Final Project/fries.jpg"},
+                {"Soda", "P 40.00", "OOP Final Project/soda.jpg"},
+                {"Pizza", "P 250.00", "OOP Final Project/pizza.jpg"},
+                {"Pasta", "P 180.00", "OOP Final Project/pasta.jpg"},
+                {"Salad", "P 120.00", "OOP Final Project/salad.jpg"},
+                {"Ice Cream", "P 100.00", "OOP Final Project/ice cream.jpg"},
+                {"Coffee", "P 90.00", "OOP Final Project/coffee.jpg"},
+                {"Chicken", "P 160.00", "OOP Final Project/fried chicken.jpg"},
+                {"Smoothie", "P 130.00", "OOP Final Project/smoothie.jpg"}
         };
 
         for (String[] item : menuItems) {
             String name = item[0];
-            double price = Double.parseDouble(item[1]);
+            double price = Double.parseDouble(item[1].substring(2)); // Remove "P"
+            String imagePath = item[2];
 
-            JLabel itemLabel = new JLabel(name + " - $" + price);
+            JPanel itemPanel = new JPanel(new BorderLayout());
+            itemPanel.setBackground(new Color(255, 204, 0));
+            itemPanel.setPreferredSize(new Dimension(250, 150)); // Smaller item panels
+
+            // Centering the image in the panel with a yellow background
+            JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Center layout for image
+            imagePanel.setBackground(new Color(255, 204, 0)); // Set yellow background
+            ImageIcon itemImage = new ImageIcon(imagePath);
+            Image img = itemImage.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH); // Scale image
+            itemImage = new ImageIcon(img);
+            JLabel imageLabel = new JLabel(itemImage);
+            imagePanel.add(imageLabel);
+
+            JLabel nameLabel = new JLabel(name + " - " + item[1]);
+            nameLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Smaller font
+            nameLabel.setForeground(Color.RED);
+
             JButton addButton = new JButton("Add to Cart");
-
-            addButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String quantityStr = JOptionPane.showInputDialog(null, "Enter quantity:");
-                    try {
-                        int quantity = Integer.parseInt(quantityStr);
-                        cart.addItem(name, price, quantity);
-                        JOptionPane.showMessageDialog(null, name + " added to cart!");
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(null, "Invalid quantity.");
-                    }
+            addButton.setPreferredSize(new Dimension(150, 30)); // Smaller button size
+            addButton.setBackground(Color.RED);
+            addButton.setForeground(Color.WHITE);
+            addButton.setFont(new Font("Arial", Font.PLAIN, 12)); // Smaller font
+            addButton.addActionListener(e -> {
+                String quantityStr = JOptionPane.showInputDialog("Enter quantity:");
+                try {
+                    int quantity = Integer.parseInt(quantityStr);
+                    cart.addItem(name, price, quantity);
+                    JOptionPane.showMessageDialog(this, name + " added to cart!");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Invalid quantity.");
                 }
             });
 
-            add(itemLabel);
-            add(addButton);
+            itemPanel.add(imagePanel, BorderLayout.NORTH); // Add image panel to the North
+            itemPanel.add(nameLabel, BorderLayout.CENTER);
+            itemPanel.add(addButton, BorderLayout.SOUTH);
+
+            add(itemPanel);
         }
     }
 }
